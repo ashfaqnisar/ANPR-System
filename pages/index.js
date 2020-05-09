@@ -1,65 +1,124 @@
 import Head from 'next/head'
+import {Button, Grid} from "@material-ui/core";
+import Dropzone from "react-dropzone";
+import React, {useState} from "react";
+import FormData from "form-data";
+import fetch from "node-fetch";
+import image from "../components/component"
+import axios from "axios"
+
 
 export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    const [uploadedFile, setUploadedFile] = useState([])
+    const [details, setDetails] = useState({})
+    const handleOnDrop = (files) => {
+        console.log(files)
+        setUploadedFile(files[0])
+    }
 
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    const handleTheUpload = async () => {
+        const res= await axios ({
+            method: "POST",
+            url:'http://localhost:8080/image',
+            data: {img: image}
+        })
 
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
 
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+    }
+    return (
+        <div className="container">
+            <Head>
+                <title>Virtual Traffic Police</title>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+            <main>
+                <h1 className="title">
+                    Welcome to <a href="https://nextjs.org">Next.js!</a>
+                </h1>
 
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+                <p className="description">
+                    Get started by editing <code>pages/index.js</code>
+                </p>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+                <Grid container justify={"center"} alignItems={"center"} direction={"column"} spacing={2}>
+                    <Grid item>
+                        <Button variant="contained" color="primary" onClick={handleTheUpload}>Upload Image</Button>
+                    </Grid>
+                    <Grid item>
+                        <Dropzone onDrop={acceptedFiles => handleOnDrop(acceptedFiles)} multiple={false}>
+                            {({getRootProps, getInputProps}) => (
+                                <section>
+                                    <div
+                                        {...getRootProps()}
+                                        style={{
+                                            height: '200px',
+                                            width: '100%',
+                                            border: '1px dashed black',
+                                            padding: '0px'
+                                        }}
+                                    >
+                                        <input {...getInputProps()} />
+                                        <h2 style={{verticalAlign: 'middle', padding: '20px 0px'}}>
+                                            Drag and Drop file here
+                                            <br/>
+                                            or
+                                            <br/>
+                                            Click Here to Select
+                                        </h2>
+                                    </div>
+                                </section>
+                            )}
+                        </Dropzone>
+                    </Grid>
+                    <Grid item>
+                        {uploadedFile ? <p>{uploadedFile.name} </p> : <></>}
+                    </Grid>
+                </Grid>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
+                {/*<div className="grid">*/}
+                {/*    <a href="https://nextjs.org/docs" className="card">*/}
+                {/*        <h3>Documentation &rarr;</h3>*/}
+                {/*        <p>Find in-depth information about Next.js features and API.</p>*/}
+                {/*    </a>*/}
 
-      <style jsx>{`
+                {/*    <a href="https://nextjs.org/learn" className="card">*/}
+                {/*        <h3>Learn &rarr;</h3>*/}
+                {/*        <p>Learn about Next.js in an interactive course with quizzes!</p>*/}
+                {/*    </a>*/}
+
+                {/*    <a*/}
+                {/*        href="https://github.com/zeit/next.js/tree/master/examples"*/}
+                {/*        className="card"*/}
+                {/*    >*/}
+                {/*        <h3>Examples &rarr;</h3>*/}
+                {/*        <p>Discover and deploy boilerplate example Next.js projects.</p>*/}
+                {/*    </a>*/}
+
+                {/*    <a*/}
+                {/*        href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"*/}
+                {/*        className="card"*/}
+                {/*    >*/}
+                {/*        <h3>Deploy &rarr;</h3>*/}
+                {/*        <p>*/}
+                {/*            Instantly deploy your Next.js site to a public URL with Vercel.*/}
+                {/*        </p>*/}
+                {/*    </a>*/}
+                {/*</div>*/}
+            </main>
+
+            <footer>
+                <a
+                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Powered by{' '}
+                    <img src="/vercel.svg" alt="Vercel Logo" className="logo"/>
+                </a>
+            </footer>
+
+            <style jsx>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
@@ -190,7 +249,7 @@ export default function Home() {
         }
       `}</style>
 
-      <style jsx global>{`
+            <style jsx global>{`
         html,
         body {
           padding: 0;
@@ -204,6 +263,6 @@ export default function Home() {
           box-sizing: border-box;
         }
       `}</style>
-    </div>
-  )
+        </div>
+    )
 }
