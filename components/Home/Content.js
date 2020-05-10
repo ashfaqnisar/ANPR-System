@@ -9,7 +9,7 @@ const storeBase64 = (base64) => {
     base64File = base64.toString()
 }
 
-const handleTheUpload = (setError) => {
+const handleTheUpload = (setDetails,setError) => {
 
     if (base64File) {
 
@@ -19,6 +19,8 @@ const handleTheUpload = (setError) => {
             data: {img: base64File},
         }).then(res => {
             console.log(res.data)
+            setDetails(res.data)
+
         }).catch(e => {
             setError("Error: ", e.message)
         })
@@ -27,7 +29,8 @@ const handleTheUpload = (setError) => {
     }
 }
 const Content = () => {
-    const [error, setError] = useState("")
+    const [error, setError] = useState(null)
+    const [details, setDetails] = useState(null)
 
     const handleOnDrop = (files) => {
         console.log(files[0])
@@ -49,44 +52,78 @@ const Content = () => {
             </h1>
 
 
-            <Grid container justify={"center"} alignItems={"center"} direction={"column"} spacing={2}>
-                <Grid item>
-                    <Dropzone onDrop={acceptedFiles => handleOnDrop(acceptedFiles)} multiple={false}>
-                        {({getRootProps, getInputProps}) => (
-                            <section>
-                                <div
-                                    {...getRootProps()}
-                                    style={{
-                                        height: '200px',
-                                        width: '100%',
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        border: '1px dashed black',
-                                        padding: '30px'
-                                    }}
-                                >
-                                    <input {...getInputProps()} />
-                                    <h3 style={{cursor: "pointer", verticalAlign: 'middle', padding: '15px 0px'}}>
-                                        Drag and Drop Images here
-                                    </h3>
-                                </div>
-                            </section>
-                        )}
-                    </Dropzone>
-                </Grid>
-                <Grid item>
-                    {uploadedImage ? <p>{uploadedImage.name} </p> : <></>}
-                </Grid>
-                <Grid item>
-                    {error ? <p style={{color: '#ed1c24'}}>{error}</p> : <></>}
-                </Grid>
-                <Grid item>
-                    <Button variant="contained" color="primary" style={{backgroundColor: "#0070f3"}}
-                            onClick={() => handleTheUpload(setError)}>Upload Image</Button>
-                </Grid>
+            {!details  ?
+                <Grid container justify={"center"} alignItems={"center"} direction={"column"} spacing={2}>
+                    <Grid item>
+                        <Dropzone onDrop={acceptedFiles => handleOnDrop(acceptedFiles)} multiple={false}>
+                            {({getRootProps, getInputProps}) => (
+                                <section>
+                                    <div
+                                        {...getRootProps()}
+                                        style={{
+                                            height: '200px',
+                                            width: '100%',
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            border: '1px dashed black',
+                                            padding: '30px'
+                                        }}
+                                    >
+                                        <input {...getInputProps()} />
+                                        <h3 style={{cursor: "pointer", verticalAlign: 'middle', padding: '15px 0px'}}>
+                                            Drag and Drop Images here
+                                        </h3>
+                                    </div>
+                                </section>
+                            )}
+                        </Dropzone>
+                    </Grid>
+                    <Grid item>
+                        {uploadedImage ? <p>{uploadedImage.name} </p> : <></>}
+                    </Grid>
+                    <Grid item>
+                        {error ? <p style={{color: '#ed1c24'}}>{error}</p> : <></>}
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" color="primary" style={{backgroundColor: "#0070f3"}}
+                                onClick={() => handleTheUpload(setDetails, setError)}>Upload Image</Button>
+                    </Grid>
 
-            </Grid>
+                </Grid> :
+                <Grid container justify={"center"} alignItems={"center"} direction="column" spacing={3}>
+                    <Grid item container justify={"center"} alignItems={"center"} direction="column" spacing={2}>
+                        <Grid item>
+                            <h3>Vehicle Details</h3>
+                        </Grid>
+                        <Grid item container direction={"row"} justify={"space-between"}>
+                            <Grid item>
+                                <p>Number Plate: {details.results[0].plate.toUpperCase()}</p>
+                                <p>Region: {details.results[0].region.code.toUpperCase()}</p>
+                            </Grid>
+                            <Grid item>
+                                <p>Type of vehicle: {details.results[0].vehicle.type.toUpperCase()}</p>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container item justify={"center"} alignItems={"center"} direction="column" spacing={2}>
+                        <Grid item container justify={"center"} alignItems={"center"} direction="column" spacing={2}>
+                            <Grid item>
+                                <h3>Prediction Details</h3>
+                            </Grid>
+                            <Grid item container direction={"row"} justify={"space-between"}>
+                                <Grid item>
+                                    <p>Plate Detection Accuracy: {details.results[0].score * 100}%</p>
+                                    <p>Processing Time: {details.processing_time}</p>
+                                </Grid>
+                                <Grid item>
+                                    <p>Type of Vehicle Accuracy: {details.results[0].vehicle.score * 100}%</p>
+                                    <p>Region Accuracy: {(details.results[0].region.score * 100).toFixed(2)}%</p>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>}
             <style jsx>{`
         .container {
           min-height: 100vh;
