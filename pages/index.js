@@ -2,28 +2,28 @@ import Head from 'next/head'
 import {Button, Grid} from "@material-ui/core";
 import Dropzone from "react-dropzone";
 import React, {useState} from "react";
-import FormData from "form-data";
-import fetch from "node-fetch";
 import image from "../components/component"
 import axios from "axios"
+import imageToBase64 from 'image-to-base64'
 
 
 export default function Home() {
-    const [uploadedFile, setUploadedFile] = useState([])
+    const [uploadedImage, setUploadedImage] = useState([])
     const [details, setDetails] = useState({})
     const handleOnDrop = (files) => {
-        console.log(files)
-        setUploadedFile(files[0])
+        imageToBase64(files[0].path).then(res => setUploadedImage(res)).catch(err => alert(err.message))
     }
 
     const handleTheUpload = async () => {
-        const res= await axios ({
-            method: "POST",
-            url:'http://localhost:8080/image',
-            data: {img: image}
-        })
-
-
+        if (uploadedImage) {
+            const res = await axios({
+                method: "POST",
+                url: 'http://localhost:8080/image',
+                data: {img: uploadedImage}
+            })
+        } else {
+            alert("please upload an image")
+        }
     }
     return (
         <div className="container">
@@ -34,7 +34,7 @@ export default function Home() {
 
             <main>
                 <h1 className="title">
-                    Welcome to <a href="https://nextjs.org">Next.js!</a>
+                    Virtual Traffic<a href="https://nextjs.org">Police</a>
                 </h1>
 
                 <p className="description">
@@ -42,9 +42,6 @@ export default function Home() {
                 </p>
 
                 <Grid container justify={"center"} alignItems={"center"} direction={"column"} spacing={2}>
-                    <Grid item>
-                        <Button variant="contained" color="primary" onClick={handleTheUpload}>Upload Image</Button>
-                    </Grid>
                     <Grid item>
                         <Dropzone onDrop={acceptedFiles => handleOnDrop(acceptedFiles)} multiple={false}>
                             {({getRootProps, getInputProps}) => (
@@ -72,8 +69,12 @@ export default function Home() {
                         </Dropzone>
                     </Grid>
                     <Grid item>
-                        {uploadedFile ? <p>{uploadedFile.name} </p> : <></>}
+                        {uploadedImage ? <p>{uploadedImage.name} </p> : <></>}
                     </Grid>
+                    <Grid item>
+                        <Button variant="contained" color="primary" onClick={handleTheUpload}>Upload Image</Button>
+                    </Grid>
+
                 </Grid>
 
                 {/*<div className="grid">*/}
