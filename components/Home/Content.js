@@ -7,25 +7,28 @@ let base64File = null;
 
 const storeBase64 = (base64) => {
     base64File = base64.toString()
-    console.log( base64File)
 }
 
-
-const handleTheUpload = async () => {
-    console.log( base64File)
+const handleTheUpload = (setError) => {
 
     if (base64File) {
-        const res = await axios({
+
+        axios({
             method: "POST",
             url: 'http://localhost:8080/image',
             data: {img: base64File},
+        }).then(res => {
+            console.log(res.data)
+        }).catch(e => {
+            setError("Error: ", e.message)
         })
     } else {
-
-        alert("please upload an image")
+        alert("please provide an image")
     }
 }
 const Content = () => {
+    const [error, setError] = useState("")
+
     const handleOnDrop = (files) => {
         console.log(files[0])
         const file = files[0]
@@ -42,7 +45,7 @@ const Content = () => {
         <>
 
             <h1 className="title" style={{marginBottom: '30px'}}>
-                Virtual Traffic <a href="https://nextjs.org">Police</a>
+                Virtual Traffic <span className="blue">Police</span>
             </h1>
 
 
@@ -76,7 +79,11 @@ const Content = () => {
                     {uploadedImage ? <p>{uploadedImage.name} </p> : <></>}
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleTheUpload}>Upload Image</Button>
+                    {error ? <p style={{color: '#ed1c24'}}>{error}</p> : <></>}
+                </Grid>
+                <Grid item>
+                    <Button variant="contained" color="primary" style={{backgroundColor: "#0070f3"}}
+                            onClick={() => handleTheUpload(setError)}>Upload Image</Button>
                 </Grid>
 
             </Grid>
@@ -123,10 +130,12 @@ const Content = () => {
           text-decoration: none;
         }
 
-        .title a {
+        .title a, .title span{
           color: #0070f3;
           text-decoration: none;
         }
+       
+        
 
         .title a:hover,
         .title a:focus,
@@ -230,59 +239,3 @@ const Content = () => {
 }
 export default Content
 
-
-{/*<div className="grid">*/
-}
-{/*    <a href="https://nextjs.org/docs" className="card">*/
-}
-{/*        <h3>Documentation &rarr;</h3>*/
-}
-{/*        <p>Find in-depth information about Next.js features and API.</p>*/
-}
-{/*    </a>*/
-}
-
-{/*    <a href="https://nextjs.org/learn" className="card">*/
-}
-{/*        <h3>Learn &rarr;</h3>*/
-}
-{/*        <p>Learn about Next.js in an interactive course with quizzes!</p>*/
-}
-{/*    </a>*/
-}
-
-{/*    <a*/
-}
-{/*        href="https://github.com/zeit/next.js/tree/master/examples"*/
-}
-{/*        className="card"*/
-}
-{/*    >*/
-}
-{/*        <h3>Examples &rarr;</h3>*/
-}
-{/*        <p>Discover and deploy boilerplate example Next.js projects.</p>*/
-}
-{/*    </a>*/
-}
-
-{/*    <a*/
-}
-{/*        href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"*/
-}
-{/*        className="card"*/
-}
-{/*    >*/
-}
-{/*        <h3>Deploy &rarr;</h3>*/
-}
-{/*        <p>*/
-}
-{/*            Instantly deploy your Next.js site to a public URL with Vercel.*/
-}
-{/*        </p>*/
-}
-{/*    </a>*/
-}
-{/*</div>*/
-}
