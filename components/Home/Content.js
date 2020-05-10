@@ -15,14 +15,14 @@ const handleTheUpload = (setDetails,setError) => {
 
         axios({
             method: "POST",
-            url: 'http://localhost:8080/image',
+            url: 'https://anpr-system-api.herokuapp.com/image',
             data: {img: base64File},
         }).then(res => {
             console.log(res.data)
             setDetails(res.data)
 
         }).catch(e => {
-            setError("Error: ", e.message)
+            setError("Error: "+ e.message)
         })
     } else {
         alert("please provide an image")
