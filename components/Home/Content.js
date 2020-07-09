@@ -21,7 +21,7 @@ const Content = () => {
       formData.append("file", uploadedImage);
       axios({
         method: "POST",
-        url: "http://localhost:8080/processImage",
+        url: "https://api-anpr.herokuapp.com/processImage",
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
