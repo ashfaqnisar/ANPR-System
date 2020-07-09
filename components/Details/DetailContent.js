@@ -21,7 +21,7 @@ const DetailContent = (props) => {
                 <p
                     className={"description"}
                 >
-                    Developed with ❤ by Team
+                    Developed with ❤ by S Hari babu, K Sai Pranav, O Rohan, K Sai Krishna.
                 </p>
             </footer>
         </div>
