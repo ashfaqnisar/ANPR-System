@@ -192,6 +192,7 @@ const Content = () => {
                 </Grid>
                 <Grid item>
                   <p>Address: {details.user.address}</p>
+                  <p>Email: {details.user.email}</p>
                 </Grid>
               </Grid>
             </Grid>
