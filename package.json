@@ -13,7 +13,7 @@
     "form-data": "^3.0.0",
     "image-to-base64": "^2.1.0",
     "lodash.get": "^4.4.2",
-    "next": "9.3.6",
+    "next": "11.1.0",
     "node-fetch": "^2.6.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
